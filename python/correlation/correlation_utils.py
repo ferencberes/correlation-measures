@@ -1,7 +1,8 @@
 import operator, sys
 import numpy as np
-import pearson_correlation_computer as pcc
-import spearman_correlation_computer as scc
+import pearson_correlation as pearson
+import spearman_correlation as spearman
+import kendall_tau_correlation as kendall
 
 def compute_correlation_sequential(centrality_maps, corr_type='spearman', top_k=0, verbose=False):
     """"Wrapper function for sequential correlation computing:
@@ -16,10 +17,14 @@ def compute_correlation_sequential(centrality_maps, corr_type='spearman', top_k=
         if verbose:
             print "[Day %i]" % i
         if corr_type == 'pearson':
-            corrs.append(pcc.corr(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
+            corrs.append(pearson.corr(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
+        elif corr_type == 'spearman': 
+            corrs.append(spearman.corr(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
+            #corrs.append(spearman.corr_no_ties(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i])) # it is for closed variance formula
+        elif corr_type == 'kendall':
+            corrs.append(kendall.kendall_tau(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
         else:
-            corrs.append(scc.corr(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
-            #corrs.append(scc.corr_no_ties(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i])) # it is for closed variance formula
+            raise RuntimeError("%s is an invalid corr_type!" % corr_type)
     if verbose:
         print '%s computation FINISHED.' % corr_type
     #return (np.array(corrs), ordered_id_list)
@@ -37,11 +42,13 @@ def order_by_centrality(centrality_maps, corr_type, top_k, verbose=False):
         if verbose:
             print "[Day %i]" % i
         if corr_type == 'pearson':
-            preprocessed = pcc.pre_proc(map_topk_filter(centrality_maps[i], top_k))
+            preprocessed = pearson.pre_proc(map_topk_filter(centrality_maps[i], top_k))
         elif corr_type == 'spearman':
-            preprocessed = scc.pre_proc(map_topk_filter(centrality_maps[i], top_k))
+            preprocessed = spearman.pre_proc(map_topk_filter(centrality_maps[i], top_k))
+        elif corr_type == 'kendall':
+            preprocessed = kendall.pre_proc(map_topk_filter(centrality_maps[i], top_k))
         else:
-            raise RuntimeError("'%s' option is not implemented. Choose from 'pearson' or 'spearman'" % corr_type)
+            raise RuntimeError("%s is an invalid corr_type!" % corr_type)
         ordered_id_list.append(preprocessed[1])
         maps_for_computation.append(preprocessed[0])
     if verbose:
@@ -58,7 +65,7 @@ def map_topk_filter(origi_map, top_k):
         filtered_map = {}
         for i in range(top_k):
             filtered_map[sorted_list[i][0]] = sorted_list[i][1]
-        return filtered_map
+    return filtered_map
 
 
 ### UTILS ###
