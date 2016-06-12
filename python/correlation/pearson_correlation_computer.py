@@ -82,7 +82,7 @@ def proc_corr(l1, l2, sort_id):
     return list_a, list_b
 
 def pre_proc(centrality_map):
-    """Return the original centrality map and an ordered index list"""
+    """Return the original centrality map and an ordered index list."""
     sorted_map = sorted(centrality_map.items(), key=operator.itemgetter(1), reverse=True)
     ret_sort = []
     for item in sorted_map:

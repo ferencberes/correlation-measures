@@ -22,26 +22,7 @@ def compute_correlation_sequential(centrality_maps, corr_type='spearman', top_k=
             #corrs.append(scc.corr_no_ties(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i])) # it is for closed variance formula
     if verbose:
         print '%s computation FINISHED.' % corr_type
-    return (np.array(corrs), ordered_id_list)
-
-
-def compute_correlation_pairwise(centrality_maps_1, centrality_maps_2, corr_type='spearman', top_k=0, verbose=False):
-    """"Wrapper function for pairwise correlation computing: 
-    'centrality_maps_1' and 'centrality_maps_2' contain consecutive intervals, on which the correlations are computed in a pairwise manner. 
-    Return [correlation_values, ordered_id_list] tuple."""
-
-    if len(centrality_maps_1) != len(centrality_maps_2):
-        raise RuntimeError('The length of the centrality maps does not match!')
-    (maps_for_computation_1, ordered_id_list_1) = order_by_centrality(centrality_maps_1, corr_type, top_k)
-    (maps_for_computation_2, ordered_id_list_2) = order_by_centrality(centrality_maps_2, corr_type, top_k)
-    corrs = []
-    for i in range(0, len(centrality_maps_1)):
-        if corr_type == 'pearson':
-            corrs.append(pcc.corr(maps_for_computation_1[i], maps_for_computation_2[i], ordered_id_list_2[i]))
-        else:
-            corrs.append(scc.corr(maps_for_computation_1[i], maps_for_computation_2[i], ordered_id_list_2[i]))
-    if verbose:
-        print '%s computation FINISHED.' % corr_type
+    #return (np.array(corrs), ordered_id_list)
     return np.array(corrs)
 
 
