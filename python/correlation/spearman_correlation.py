@@ -84,7 +84,7 @@ def proc_corr(l1, l2, sort_id):
 
 def pre_proc(centrality_map):
     """Return the position map and an ordered index list"""
-    print "spearman pre_proc"
+    #print "spearman pre_proc"
     ret_val, ret_sort = pearson.pre_proc(centrality_map)
     return  centrality_to_position(ret_val, ret_sort)
 

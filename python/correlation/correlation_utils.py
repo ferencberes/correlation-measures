@@ -22,6 +22,7 @@ def compute_correlation_sequential(centrality_maps, corr_type='spearman', top_k=
             corrs.append(spearman.corr(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
             #corrs.append(spearman.corr_no_ties(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i])) # it is for closed variance formula
         elif corr_type == 'kendall':
+            #print "kendall"
             corrs.append(kendall.kendall_tau(maps_for_computation[i-1], maps_for_computation[i], ordered_id_list[i]))
         else:
             raise RuntimeError("%s is an invalid corr_type!" % corr_type)
@@ -94,8 +95,8 @@ def main():
     output_file = sys.argv[3]
     corr_type = sys.argv[4]
     num_of_intervals = int(sys.argv[5])
-    if not corr_type in ['pearson', 'spearman']:
-        raise RuntimeError("Only 'pearson' and 'spearman' correlations are cupported!")
+    if not corr_type in ['pearson', 'spearman','kendall']:
+        raise RuntimeError("Only 'pearson', 'spearman' and 'kendall' are supported!")
     out_file = open(output_file, 'w')
     top_list_prev = []
     top_list = []

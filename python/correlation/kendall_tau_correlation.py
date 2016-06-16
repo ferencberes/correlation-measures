@@ -2,6 +2,7 @@
 
 import math
 import pearson_correlation as pearson
+import spearman_correlation as spearman
 
 def sign(x,y):
     if x > y:
@@ -82,4 +83,5 @@ def proc_kendall(l1, l2, sort_id):
 
 def pre_proc(centrality_map):
     """Return the original centrality map and an ordered index list."""
-    return  pearson.pre_proc(centrality_map)
+    #return  pearson.pre_proc(centrality_map)
+    return  spearman.pre_proc(centrality_map)
