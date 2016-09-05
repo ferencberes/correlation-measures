@@ -1,0 +1,107 @@
+import math
+import operator
+import pandas as pd
+from scipy.stats import pearsonr,spearmanr,kendalltau,rankdata
+import itertools
+import numpy as np
+import numexpr as ne
+
+
+### Basic correlation measures ###
+
+def corr_pearson(top_list_prev, top_list):
+    """Compute Pearson's R correlation (based on Scipy)
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    list_a, list_b = proc_corr(top_list_prev, top_list)
+    return [pearsonr(list_a, list_b)[0]]
+
+def corr_spearman(top_list_prev, top_list):
+    """Compute Spearman's Rho correlation (based on Scipy)
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    list_a, list_b = proc_corr(top_list_prev, top_list)
+    return [spearmanr(list_a, list_b)[0]]
+
+def corr_kendalltau(top_list_prev, top_list):
+    """Compute Kendall's Tau correlation (based on Scipy).
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    # it is irrelevant whether we compute kendall for ranks or scores.
+    list_a, list_b = proc_corr(top_list_prev, top_list)
+    return [kendalltau(list_a, list_b)[0]]
+
+
+### Score list preprocessor functions ###
+
+def proc_corr(l_1, l_2):
+    """Fill lists with scores ordered by the ranks in the second list. 
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    l1=l_1.copy()
+    l2=l_2.copy()
+    l1.columns=['l1_col']
+    l2.columns=['l2_col']
+    df=pd.concat([l2, l1], axis=1).fillna(0)
+    index_diff=list(set(list(l1.index))-set(list(l2.index)))
+    index_diff.sort()
+    sorted_id=list(l2.index)+index_diff # NOTE: input lists must be sorted!
+    df=df.reindex(sorted_id)
+    return np.array(df['l1_col']), np.array(df['l2_col'])
+
+def proc_corr_ranks(top_list_prev, top_list):
+    """Convert scores to ranks ordered by the ranks in the second list. 
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    vector_prev, vector=proc_corr(top_list_prev, top_list)
+    vector_prev = np.full(len(vector_prev),len(vector_prev)+1)-rankdata(vector_prev, method='average')
+    vector = np.full(len(vector_prev),len(vector_prev)+1)-rankdata(vector, method='average')
+    return vector_prev, vector
+
+
+### Weighted Kendall-Tau (custom implementation) ###
+
+def corr_weighted_kendalltau(top_list_prev, top_list):
+    """Compute Weighted Kendall's Tau correlation (custom implementation).
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    # it is irrelevant whether we compute kendall for ranks or scores. But in case of weights the ranks will be uesed!
+    vector_prev, vector=proc_corr_ranks(top_list_prev, top_list) 
+    first_prev, second_prev=get_first_second_vector(vector_prev)
+    first, second=get_first_second_vector(vector)
+    sign_prev=get_signum_vector(first_prev, second_prev)
+    sign=get_signum_vector(first, second)
+    # compute weights from current toplists
+    weight_vector=get_weight_vector(first, second)
+    return compute_correl(sign_prev, sign, weight_vector)
+
+def get_first_second_vector(vector):
+    """The output vectors can be used for creating index pairs.
+    NOTE: maybe we do NOT need all the same pairs multiple times!"""
+    length=len(vector)
+    vector_first=np.repeat(vector, length)
+    vector_second=np.tile(vector, length)
+    return vector_first, vector_second
+
+def get_signum_vector(vector_first, vector_second):
+    signum=np.sign(ne.evaluate('vector_first-vector_second'))
+    return signum
+
+def get_weight_vector(vector_first, vector_second):
+    # NOTE: reciprocal function works because the vectors hold positive ranks
+    rec_first=np.reciprocal(vector_first.astype(float))
+    rec_second=np.reciprocal(vector_second.astype(float))
+    return ne.evaluate('rec_first+rec_second')
+
+def get_weighted_product(first,second,weight):
+    pr1=ne.evaluate('first*second')
+    return np.dot(pr1,weight)
+
+def compute_correl(vector1,vector2, weight_vector=None):
+    """General (weighted) correlation computer function. 
+    NOTE: it is possible to compute Pearson, Spearman and Kendall as well for proper vector1 and vector2."""
+    if weight_vector==None:
+        product = np.dot(vector1, vector2)
+        norm = np.linalg.norm(vector2)
+        norm_prev=np.linalg.norm(vector1)
+        return [product/(norm*norm_prev)]
+    else:
+        product = get_weighted_product(vector1,vector2,weight_vector)
+        norm = math.sqrt(get_weighted_product(vector2,vector2,weight_vector))
+        ### BUG: for norm_prev should we use different weight function? (e.g.: calculated from vector1..)
+        norm_prev = math.sqrt(get_weighted_product(vector1,vector1,weight_vector))
+        return [product/(norm*norm_prev)]
