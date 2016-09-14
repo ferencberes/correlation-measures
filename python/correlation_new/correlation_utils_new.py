@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import correlation_computer as cc
+import sys
 
 ### Utils ###
 
@@ -14,13 +15,15 @@ def load_score_map(input_prefix ,day, measure):
 def result2file(result_list,file_name):
     """Write correlation values to file for each snapshot."""
     with open(file_name, 'w') as f:
-        #f.write('index value\n')
-        for i in xrange(len(result_list)):
-            f.write('%i %f\n' % (i, result_list[i]))
+        if len(result_list) == 1:
+           f.write('%f\n' % (result_list[0]))
+        else:
+           for i in xrange(len(result_list)):
+              f.write('%i %f\n' % (i, result_list[i]))
     print 'Done'
 
 
-def calculate_corr_for_a_day(input_prefix, day, corr_type, measure):
+def calculate_corr_for_a_day(input_prefix, day, corr_type, measure, output_prefix=None):
     """Calculate the selected correlation measure for the given snapshot."""
     prev_day = load_score_map(input_prefix, day-1, measure)
     current_day = load_score_map(input_prefix, day, measure)
@@ -35,7 +38,10 @@ def calculate_corr_for_a_day(input_prefix, day, corr_type, measure):
         corr = cc.corr_weighted_kendalltau(prev_day,current_day)[0]
     else:
         raise RuntimeError("Invalid correlation type: %s!" % corr_type)
-    return corr
+    if output_prefix == None:
+    	return corr
+    else:
+	result2file([corr], '%s_%i.%s' % (output_prefix, day-1, corr_type))
         
 
 def calculate_corr_for_days(input_prefix, days, corr_type, measure_type):
@@ -83,4 +89,16 @@ def get_correlations_from_matrix_for_act(A, num_of_days, corr_type):
     """Function to call scipy correlation code for active vertices.
     Matrix A contains scores from popularity model."""
     return map(lambda i : sort_and_get_corr(A,i,corr_type=corr_type), range(1,num_of_days))
+
+
+if __name__ == "__main__":
+   if len(sys.argv) == 6:
+      input_prefix = sys.argv[1]
+      day = int(sys.argv[2])
+      corr_type = sys.argv[3]
+      measure = sys.argv[4]
+      output_prefix = sys.argv[5]
+      calculate_corr_for_a_day(input_prefix, day, corr_type, measure, output_prefix)
+   else:
+      print "Usage: <input_prefix> <day> <corr_type> <measure> <output_prefix>"		
 
