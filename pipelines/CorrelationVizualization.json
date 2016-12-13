@@ -1,0 +1,38 @@
+{
+   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/CorrelationVizualization.json", 
+   "default_config": {
+      "dataset_display_name": "Occupy", 
+      "dataset_name": "oc", 
+      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/"
+   }, 
+   "description": "Add some custom description for this pipeline!", 
+   "id": "1", 
+   "name": "CorrelationVizualization", 
+   "notebooks": [
+      {
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "CorrelationVizualization", 
+         "path": "pipelines/CorrelationVizualization.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Parameters"
+      }, 
+      {
+         "config": {
+            "dataset_display_name": "Maidan", 
+            "dataset_name": "maidan"
+         }, 
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "Visualizer", 
+         "path": "ipython/pearson-and-jaccard.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Experiment"
+      }
+   ], 
+   "reports": []
+}
