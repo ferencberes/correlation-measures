@@ -1,2 +1,6 @@
+datawand_info.json
+pipelines/luigi.cfg
 *.ipynb_checkpoints/
 *.pyc
+*.tmp
+*.info
