@@ -3,7 +3,8 @@
    "default_config": {
       "corr_types": [
          "pearson", 
-         "spearman"
+         "spearman", 
+         "kendall"
       ], 
       "dataset_id": "oc", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
@@ -53,5 +54,14 @@
          "type": "Experiment"
       }
    ], 
-   "reports": []
+   "reports": [
+      {
+         "date": "2016-12-13", 
+         "id": "correlation_measure_recomputation_i._2016-12-13", 
+         "name": "Correlation measure recomputation I.", 
+         "note": "I set up this pipeline for correlation measure recomputation. Then calculated Pearson, Spearman nad Kendall for our datasets. ", 
+         "status": "active", 
+         "user": "fberes"
+      }
+   ]
 }
