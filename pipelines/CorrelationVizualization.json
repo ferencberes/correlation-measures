@@ -5,7 +5,7 @@
       "dataset_name": "oc", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/"
    }, 
-   "description": "Add some custom description for this pipeline!", 
+   "description": "Visualize Pearson, Spearman, Kendall and weighted Kendall correlations for the selected datasets.", 
    "id": "1", 
    "name": "CorrelationVizualization", 
    "notebooks": [

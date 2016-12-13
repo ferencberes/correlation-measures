@@ -1,0 +1,57 @@
+{
+   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/CorrelationComputation.json", 
+   "default_config": {
+      "corr_types": [
+         "pearson", 
+         "spearman"
+      ], 
+      "dataset_id": "oc", 
+      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
+      "measure_id": "pagerank"
+   }, 
+   "description": "With this pipeline we can compute day-by-day correlations for Pearson, Spearman and Kendall using scipy. After we computed the correlations, other statistics are calculated as well (e.g.: ratio of active users by day)", 
+   "id": "2", 
+   "name": "CorrelationComputation", 
+   "notebooks": [
+      {
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "CorrelationComputation", 
+         "path": "pipelines/CorrelationComputation.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Parameters"
+      }, 
+      {
+         "config": {
+            "dataset_id": "oc"
+         }, 
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "CorrelationComputer", 
+         "path": "ipython/utils/ComputeCorrelationAndStats.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Experiment"
+      }, 
+      {
+         "config": {
+            "dataset_id": "oc"
+         }, 
+         "dependencies": [
+            "CorrelationComputer"
+         ], 
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "ResultCollector", 
+         "path": "ipython/utils/CorrelationResultCollector.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Experiment"
+      }
+   ], 
+   "reports": []
+}
