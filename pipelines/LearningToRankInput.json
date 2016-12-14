@@ -1,0 +1,38 @@
+{
+   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/LearningToRankInput.json", 
+   "default_config": {
+      "dataset_id": "oc", 
+      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
+      "measure_id": "pagerank"
+   }, 
+   "description": "This pipeline can generate input for learning to rank models. Features are the centrality scores of former days. Each query represents a day.", 
+   "id": "3", 
+   "name": "LearningToRankInput", 
+   "notebooks": [
+      {
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "LearningToRankInput", 
+         "path": "pipelines/LearningToRankInput.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Parameters"
+      }, 
+      {
+         "config": {
+            "dataset_id": "oc", 
+            "is_popularity_model": false
+         }, 
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_type": "py2-env", 
+         "name": "L2RInputGenerator", 
+         "path": "ipython/utils/GenerateInputForL2R.ipynb", 
+         "session_id": null, 
+         "status": "Offline", 
+         "type": "Experiment"
+      }
+   ], 
+   "reports": []
+}
