@@ -1,7 +1,7 @@
 {
    "config_path": "/home/fberes/git/correlation-measures/pipelines/PopularityModelScores.json", 
    "default_config": {
-      "dataset_id": "oc", 
+      "dataset_id": "15o", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
       "measure_id": "pagerank", 
       "num_workers": 10
@@ -47,6 +47,17 @@
          "type": "Generator"
       }, 
       {
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_status": "Offline", 
+         "kernel_type": "py2-env", 
+         "name": "PMSpearmanStability", 
+         "path": "ipython/popularity_model/PopModelSpearmanPearsonExperiments.ipynb", 
+         "pipeline_status": "off", 
+         "session_id": null, 
+         "type": "experiment"
+      }, 
+      {
          "config": {
             "dataset_id": "15o", 
             "measure_id": "pagerank"
@@ -55,8 +66,8 @@
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
-         "name": "PMSpearmanStability", 
-         "path": "ipython/popularity_model/PopModelSpearmanPearsonExperiments.ipynb", 
+         "name": "PMKendallStability", 
+         "path": "ipython/popularity_model/PopModelKendallExperiments.ipynb", 
          "pipeline_status": "on", 
          "session_id": null, 
          "type": "experiment"
