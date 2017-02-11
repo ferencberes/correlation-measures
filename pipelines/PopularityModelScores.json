@@ -51,9 +51,9 @@
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
-         "name": "PMSpearmanStability", 
+         "name": "PMSpearmanExperiment", 
          "path": "ipython/popularity_model/PopModelSpearmanPearsonExperiments.ipynb", 
-         "pipeline_status": "off", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "type": "experiment"
       }, 
@@ -66,9 +66,20 @@
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
-         "name": "PMKendallStability", 
+         "name": "PMKendallExperiment", 
          "path": "ipython/popularity_model/PopModelKendallExperiments.ipynb", 
          "pipeline_status": "on", 
+         "session_id": null, 
+         "type": "experiment"
+      }, 
+      {
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_status": "Offline", 
+         "kernel_type": "py2-env", 
+         "name": "PMWeightedKendallExperiment", 
+         "path": "ipython/popularity_model/PopModelWeightedKendallExperiments.ipynb", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "type": "experiment"
       }
