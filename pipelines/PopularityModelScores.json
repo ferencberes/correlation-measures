@@ -1,8 +1,10 @@
 {
    "config_path": "/home/fberes/git/correlation-measures/pipelines/PopularityModelScores.json", 
    "default_config": {
-      "dataset_id": "oc_pagerank", 
-      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/"
+      "dataset_id": "oc", 
+      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
+      "measure_id": "pagerank", 
+      "num_workers": 10
    }, 
    "description": "Generate popularity model scores with this pipeline for all 5 datasets.", 
    "id": "0", 
@@ -33,19 +35,31 @@
          "type": "Parameters"
       }, 
       {
-         "config": {
-            "dataset_id": "oc_pagerank"
-         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMScoreGenerator", 
          "path": "ipython/popularity-model-score-generator.ipynb", 
-         "pipeline_status": "on", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Generator"
+      }, 
+      {
+         "config": {
+            "dataset_id": "15o", 
+            "measure_id": "pagerank"
+         }, 
+         "is_clone": "no", 
+         "kernel_id": null, 
+         "kernel_status": "Offline", 
+         "kernel_type": "py2-env", 
+         "name": "PMSpearmanStability", 
+         "path": "ipython/popularity_model/PopModelSpearmanPearsonExperiments.ipynb", 
+         "pipeline_status": "on", 
+         "session_id": null, 
+         "type": "experiment"
       }
    ], 
    "reports": []

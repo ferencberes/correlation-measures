@@ -14,7 +14,7 @@ def list_subset(l,idx,exclusive=False):
     else:
         return l_idx
 
-# TODO: MATLAB random binomial funxtion was different???
+# TODO: MATLAB random binomial function was different???
 def binornd(n,p):
     probs = np.zeros(n)
     #indeces = np.random.binomial(n,p,size=n)
@@ -28,11 +28,13 @@ def binornd(n,p):
 
 class PopularityModel:
 
-    def __init__(self, number_of_users, number_of_days, exponent=1.2):
+    def __init__(self, number_of_users, number_of_days, exponent=1.2, round_scores=True):
         """Initialize popularity model with the given power law exponent."""
         self.num_of_users = number_of_users
         self.num_of_days = number_of_days
         self.exponent = exponent
+        # rounding scores can simulate ties
+        self.round_scores = round_scores
         self.init_model()
 
 
@@ -80,5 +82,7 @@ class PopularityModel:
             p_mix0 = (p[i+1]-intersection[i]) / (1-q[i])
             prob_set[i+1,leader_set] = np.ones(len(leader_set))
             prob_set[i+1,user_set] = prob_set[i,user_set] * binornd(n1,p_mix1) + (1-prob_set[i,user_set]) * binornd(n1,p_mix0);
-
-        return self.X * prob_set#, prob_set
+        if self.round_scores:
+            return np.ceil(self.X * prob_set)
+        else:
+            return self.X * prob_set

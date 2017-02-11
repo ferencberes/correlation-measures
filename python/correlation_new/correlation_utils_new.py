@@ -75,7 +75,7 @@ def get_correlations_from_matrix(A, num_of_days, corr_type):
         raise RuntimeError("Invalid correlation type: %s!" % corr_type)
     return corr
 
-def sort_and_get_corr(A, idx, corr_type):
+def sort_and_get_corr(A, corr_type, idx):
     two_day_df = pd.DataFrame(A[[idx-1,idx],:].T, columns=["prev","curr"]) # transposition is needed!
     two_day_df["id"] = two_day_df.index
     prev_df = two_day_df[["id","prev"]].query("prev>0")
@@ -96,10 +96,16 @@ def sort_and_get_corr(A, idx, corr_type):
         raise RuntimeError("Invalid correlation type: %s!" % corr_type)
     return corr
     
-def get_correlations_from_matrix_for_act(A, num_of_days, corr_type):
+def get_correlations_from_matrix_for_act(A, num_of_days, corr_type, n_threads=4):
     """Function to call scipy correlation code for active vertices.
     Matrix A contains scores from popularity model."""
-    return map(lambda i : sort_and_get_corr(A,i,corr_type=corr_type), range(1,num_of_days))
+    #return map(lambda i : sort_and_get_corr(A,i,corr_type=corr_type), range(1,num_of_days))
+    f_partial = functools.partial(sort_and_get_corr,A,corr_type)
+    pool = multiprocessing.Pool(processes=n_threads)
+    res = pool.map(f_partial, range(1,num_of_days))
+    pool.close()
+    pool.join()
+    return res
 
 
 if __name__ == "__main__":
