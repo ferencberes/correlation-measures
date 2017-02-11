@@ -48,7 +48,8 @@ def calculate_corr_for_a_day(input_prefix, corr_type, measure, day, output_prefi
         
 
 def calculate_corr_for_days(input_prefix, days, corr_type, measure_type, n_threads=10):
-    """Calculate the selected correlation measure for multiple snapshots."""
+    """Calculate the selected correlation measure for multiple snapshots. 
+    Choose from 'pearson', 'spearman', 'kendall' or 'w_kendall'."""
     #return map(lambda x: calculate_corr_for_a_day(input_prefix, corr_type, measure_type, x), days)
     f_partial = functools.partial(calculate_corr_for_a_day,input_prefix,corr_type,measure_type)
     pool = multiprocessing.Pool(processes=n_threads)

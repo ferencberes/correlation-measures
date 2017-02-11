@@ -4,11 +4,13 @@
       "corr_types": [
          "pearson", 
          "spearman", 
-         "kendall"
+         "kendall", 
+         "w_kendall"
       ], 
       "dataset_id": "oc", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
-      "measure_id": "pagerank"
+      "measure_id": "pagerank", 
+      "num_workers": 10
    }, 
    "description": "With this pipeline we can compute day-by-day correlations for Pearson, Spearman and Kendall using scipy. After we computed the correlations, other statistics are calculated as well (e.g.: ratio of active users by day)", 
    "id": "2", 
@@ -28,7 +30,7 @@
       }, 
       {
          "config": {
-            "dataset_id": "oc", 
+            "dataset_id": "maidan", 
             "measure_id": "pagerank"
          }, 
          "is_clone": "no", 
@@ -44,7 +46,7 @@
       }, 
       {
          "config": {
-            "dataset_id": "oc", 
+            "dataset_id": "maidan", 
             "measure_id": "pagerank"
          }, 
          "dependencies": [
