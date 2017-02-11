@@ -10,7 +10,7 @@
       "dataset_id": "oc", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
       "measure_id": "pagerank", 
-      "num_workers": 10
+      "num_workers": 20
    }, 
    "description": "With this pipeline we can compute day-by-day correlations for Pearson, Spearman and Kendall using scipy. After we computed the correlations, other statistics are calculated as well (e.g.: ratio of active users by day)", 
    "id": "2", 
@@ -31,7 +31,7 @@
       {
          "config": {
             "dataset_id": "maidan", 
-            "measure_id": "pagerank"
+            "measure_id": "in_degree"
          }, 
          "is_clone": "no", 
          "kernel_id": null, 
@@ -47,7 +47,7 @@
       {
          "config": {
             "dataset_id": "maidan", 
-            "measure_id": "pagerank"
+            "measure_id": "in_degree"
          }, 
          "dependencies": [
             "CorrelationComputer"
@@ -68,7 +68,7 @@
       {
          "date": "2017-02-09", 
          "id": "include_zero_indegree_2017-02-09", 
-         "kernel_status": "active", 
+         "kernel_status": "disabled", 
          "name": "include zero indegree", 
          "note": "I regenerated all file and result without filtering for only positive centrality score. Formerly, zero indegree nodes were excluded but all vertices were included for pagerank.", 
          "user": "fberes"
