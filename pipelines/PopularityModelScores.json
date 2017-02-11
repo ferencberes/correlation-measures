@@ -1,5 +1,5 @@
 {
-   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/PopularityModelScores.json", 
+   "config_path": "/home/fberes/git/correlation-measures/pipelines/PopularityModelScores.json", 
    "default_config": {
       "dataset_id": "oc_pagerank", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/"
@@ -11,9 +11,11 @@
       {
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PopularityModelScores", 
          "path": "pipelines/PopularityModelScores.ipynb", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Parameters"
@@ -21,9 +23,11 @@
       {
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMScoreGeneratorFull", 
          "path": "ipython/popularity-model-kendall-experiments.ipynb", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Parameters"
@@ -34,9 +38,11 @@
          }, 
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMScoreGenerator", 
          "path": "ipython/popularity-model-score-generator.ipynb", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Generator"

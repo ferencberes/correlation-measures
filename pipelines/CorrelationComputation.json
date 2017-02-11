@@ -1,5 +1,5 @@
 {
-   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/CorrelationComputation.json", 
+   "config_path": "/home/fberes/git/correlation-measures/pipelines/CorrelationComputation.json", 
    "default_config": {
       "corr_types": [
          "pearson", 
@@ -17,38 +17,46 @@
       {
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationComputation", 
          "path": "pipelines/CorrelationComputation.ipynb", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Parameters"
       }, 
       {
          "config": {
-            "dataset_id": "oc"
+            "dataset_id": "oc", 
+            "measure_id": "pagerank"
          }, 
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationComputer", 
          "path": "ipython/utils/ComputeCorrelationAndStats.ipynb", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Experiment"
       }, 
       {
          "config": {
-            "dataset_id": "oc"
+            "dataset_id": "oc", 
+            "measure_id": "pagerank"
          }, 
          "dependencies": [
             "CorrelationComputer"
          ], 
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "ResultCollector", 
          "path": "ipython/utils/CorrelationResultCollector.ipynb", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Experiment"
@@ -56,8 +64,17 @@
    ], 
    "reports": [
       {
+         "date": "2017-02-09", 
+         "id": "include_zero_indegree_2017-02-09", 
+         "kernel_status": "active", 
+         "name": "include zero indegree", 
+         "note": "I regenerated all file and result without filtering for only positive centrality score. Formerly, zero indegree nodes were excluded but all vertices were included for pagerank.", 
+         "user": "fberes"
+      }, 
+      {
          "date": "2016-12-13", 
          "id": "correlation_measure_recomputation_i._2016-12-13", 
+         "kernel_status": "disabled", 
          "name": "Correlation measure recomputation I.", 
          "note": "I set up this pipeline for correlation measure recomputation. Then calculated Pearson, Spearman nad Kendall for our datasets. ", 
          "status": "active", 

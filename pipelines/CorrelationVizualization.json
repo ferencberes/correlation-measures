@@ -1,5 +1,5 @@
 {
-   "config_path": "/home/fberes/NETWORKS/feri-sandbox/git/correlation-measures/pipelines/CorrelationVizualization.json", 
+   "config_path": "/home/fberes/git/correlation-measures/pipelines/CorrelationVizualization.json", 
    "default_config": {
       "dataset_display_name": "Occupy", 
       "dataset_name": "oc", 
@@ -12,9 +12,11 @@
       {
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationVizualization", 
          "path": "pipelines/CorrelationVizualization.ipynb", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Parameters"
@@ -26,9 +28,11 @@
          }, 
          "is_clone": "no", 
          "kernel_id": null, 
+         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "Visualizer", 
          "path": "ipython/pearson-and-jaccard.ipynb", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Experiment"

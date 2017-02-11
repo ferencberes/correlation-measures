@@ -10,7 +10,7 @@ import numexpr as ne
 ### Basic correlation measures ###
 
 def corr_pearson(top_list_prev, top_list):
-    """Compute Pearson's R correlation (based on Scipy)
+    """Compute Pearson correlation (based on Scipy)
     NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
     list_a, list_b = proc_corr(top_list_prev, top_list)
     return [pearsonr(list_a, list_b)[0]]
@@ -28,8 +28,18 @@ def corr_kendalltau(top_list_prev, top_list):
     list_a, list_b = proc_corr(top_list_prev, top_list)
     return [kendalltau(list_a, list_b)[0]]
 
+def corr_weighted_kendalltau(top_list_prev, top_list):
+    """Compute weighted Kendall's Tau correlation (based on custom implementation!).
+    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
+    # it is irrelevant whether we compute kendall for ranks or scores.
+    list_a, list_b = proc_corr(top_list_prev, top_list)
+    if len(list_a) != len(list_b):
+        raise RuntimeError("The length of 'list_a' and 'list_b' must be the same!")
+    rank_list_a = tiedrank(list_a)
+    rank_list_b = tiedrank(list_b)
+    return [computeWKendall(rank_list_a,rank_list_b,ranked_input=True)[1]]
 
-### Score list preprocessor functions ###
+### Score list preproceor functions ###
 
 def proc_corr(l_1, l_2):
     """Fill lists with scores ordered by the ranks in the second list. 
@@ -41,67 +51,51 @@ def proc_corr(l_1, l_2):
     df=pd.concat([l2, l1], axis=1).fillna(0)
     index_diff=list(set(list(l1.index))-set(list(l2.index)))
     index_diff.sort()
-    sorted_id=list(l2.index)+index_diff # NOTE: input lists must be sorted!
+    sorted_id=list(l2.index)+index_diff # NOTE: input lists must be sorted! For custom weighted correlations?
     df=df.reindex(sorted_id)
     return np.array(df['l1_col']), np.array(df['l2_col'])
 
-def proc_corr_ranks(top_list_prev, top_list):
-    """Convert scores to ranks ordered by the ranks in the second list. 
-    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
-    vector_prev, vector=proc_corr(top_list_prev, top_list)
-    vector_prev = np.full(len(vector_prev),len(vector_prev)+1)-rankdata(vector_prev, method='average')
-    vector = np.full(len(vector_prev),len(vector_prev)+1)-rankdata(vector, method='average')
-    return vector_prev, vector
+
+def tiedrank(vector):
+    """Return rank with average tie resolution. Rank is based on decreasing score order"""
+    return (len(vector) + 1) * np.ones(len(vector)) - rankdata(vector, method='average')
 
 
-### Weighted Kendall-Tau (custom implementation) ###
+def get_union_of_active_nodes(day_1, day_2):
+    """Find common subvectors of non-zero elements. (we only consider positive scores to be active nodes)"""
+    ind_one=np.nonzero(day_1)[0];
+    ind_two=np.nonzero(day_2)[0];
+    ind=np.union1d(ind_one,ind_two)
+    ranks_day_one=tiedrank(day_1[ind])
+    ranks_day_two=tiedrank(day_2[ind])
+    return ranks_day_one, ranks_day_two
 
-def corr_weighted_kendalltau(top_list_prev, top_list):
-    """Compute Weighted Kendall's Tau correlation (custom implementation).
-    NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
-    # it is irrelevant whether we compute kendall for ranks or scores. But in case of weights the ranks will be uesed!
-    vector_prev, vector=proc_corr_ranks(top_list_prev, top_list) 
-    first_prev, second_prev=get_first_second_vector(vector_prev)
-    first, second=get_first_second_vector(vector)
-    sign_prev=get_signum_vector(first_prev, second_prev)
-    sign=get_signum_vector(first, second)
-    # compute weights from current toplists
-    weight_vector=get_weight_vector(first, second)
-    return compute_correl(sign_prev, sign, weight_vector)
 
-def get_first_second_vector(vector):
-    """The output vectors can be used for creating index pairs.
-    NOTE: maybe we do NOT need all the same pairs multiple times!"""
-    length=len(vector)
-    vector_first=np.repeat(vector, length)
-    vector_second=np.tile(vector, length)
-    return vector_first, vector_second
-
-def get_signum_vector(vector_first, vector_second):
-    signum=np.sign(ne.evaluate('vector_first-vector_second'))
-    return signum
-
-def get_weight_vector(vector_first, vector_second):
-    # NOTE: reciprocal function works because the vectors hold positive ranks
-    rec_first=np.reciprocal(vector_first.astype(float))
-    rec_second=np.reciprocal(vector_second.astype(float))
-    return ne.evaluate('rec_first+rec_second')
-
-def get_weighted_product(first,second,weight):
-    pr1=ne.evaluate('first*second')
-    return np.dot(pr1,weight)
-
-def compute_correl(vector1,vector2, weight_vector=None):
-    """General (weighted) correlation computer function. 
-    NOTE: it is possible to compute Pearson, Spearman and Kendall as well for proper vector1 and vector2."""
-    if weight_vector==None:
-        product = np.dot(vector1, vector2)
-        norm = np.linalg.norm(vector2)
-        norm_prev=np.linalg.norm(vector1)
-        return [product/(norm*norm_prev)]
+def computeWKendall(day_1,day_2,ranked_input=False):
+    """Compute Kendall and WKendall only for active (nonzero) positions."""
+    if ranked_input:
+        rankX, rankY = day_1, day_2
     else:
-        product = get_weighted_product(vector1,vector2,weight_vector)
-        norm = math.sqrt(get_weighted_product(vector2,vector2,weight_vector))
-        ### BUG: for norm_prev should we use different weight function? (e.g.: calculated from vector1..)
-        norm_prev = math.sqrt(get_weighted_product(vector1,vector1,weight_vector))
-        return [product/(norm*norm_prev)]
+        rankX, rankY = get_union_of_active_nodes(day_1, day_2)
+    n = len(rankX)
+    denomX, denomY = 0, 0
+    denomXW, denomYW = 0, 0
+    num, numW = 0, 0 
+
+    for i in range(n):
+        for j in range(i+1,n):
+            weightXY= 1.0/rankY[i]+1.0/rankY[j]
+            weightX=1.0/rankX[i]+1.0/rankX[j];
+            weightY=1.0/rankY[i]+1.0/rankY[j];
+            termX=np.sign(rankX[i]-rankX[j]);
+            termY=np.sign(rankY[i]-rankY[j]);
+            denomX=denomX+(termX)**2;
+            denomY=denomY+(termY)**2;
+            denomXW=denomXW+(termX)**2*weightX;
+            denomYW=denomYW+(termY)**2*weightY;
+            num=num+termX*termY;
+            numW=numW+termX*termY*weightXY;
+
+    Kendall=num/math.sqrt(denomX*denomY);
+    WKendall=numW/math.sqrt(denomXW*denomYW);
+    return [Kendall, WKendall]
