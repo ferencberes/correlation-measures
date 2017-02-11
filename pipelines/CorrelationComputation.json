@@ -30,7 +30,7 @@
       }, 
       {
          "config": {
-            "dataset_id": "maidan", 
+            "dataset_id": "15o", 
             "measure_id": "in_degree"
          }, 
          "is_clone": "no", 
@@ -46,7 +46,7 @@
       }, 
       {
          "config": {
-            "dataset_id": "maidan", 
+            "dataset_id": "15o", 
             "measure_id": "in_degree"
          }, 
          "dependencies": [
@@ -68,7 +68,7 @@
       {
          "date": "2017-02-09", 
          "id": "include_zero_indegree_2017-02-09", 
-         "kernel_status": "disabled", 
+         "kernel_status": "active", 
          "name": "include zero indegree", 
          "note": "I regenerated all file and result without filtering for only positive centrality score. Formerly, zero indegree nodes were excluded but all vertices were included for pagerank.", 
          "user": "fberes"
