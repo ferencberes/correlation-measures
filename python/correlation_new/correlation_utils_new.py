@@ -44,7 +44,7 @@ def calculate_corr_for_a_day(input_prefix, corr_type, measure, day, output_prefi
     if output_prefix == None:
     	return corr
     else:
-	result2file([corr], '%s_%i.%s' % (output_prefix, day-1, corr_type))
+	result2file([corr], '%s_%s_%i.%s' % (output_prefix, measure, day-1, corr_type))
         
 
 def calculate_corr_for_days(input_prefix, days, corr_type, measure_type, n_threads=10):
@@ -111,11 +111,12 @@ def get_correlations_from_matrix_for_act(A, num_of_days, corr_type, n_threads=4)
 if __name__ == "__main__":
     if len(sys.argv) == 6:
         input_prefix = sys.argv[1]
-        day = int(sys.argv[2])
+        output_prefix = sys.argv[2]
         corr_type = sys.argv[3]
         measure = sys.argv[4]
-        output_prefix = sys.argv[5]
-        calculate_corr_for_a_day(input_prefix, day, corr_type, measure, output_prefix)
+        day = int(sys.argv[5])
+        
+        calculate_corr_for_a_day(input_prefix, corr_type, measure, day, output_prefix)
     else:
-        print "Usage: <input_prefix> <day> <corr_type> <measure> <output_prefix>"		
+        print "Usage: <input_prefix> <output_prefix> <corr_type> <measure> <second_day>"		
 
