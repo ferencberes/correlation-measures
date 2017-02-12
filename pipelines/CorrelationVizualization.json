@@ -38,7 +38,7 @@
          "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
-         "type": "Experiment"
+         "type": "Visualizer"
       }
    ], 
    "reports": []
