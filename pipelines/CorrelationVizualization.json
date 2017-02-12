@@ -1,9 +1,11 @@
 {
    "config_path": "/home/fberes/git/correlation-measures/pipelines/CorrelationVizualization.json", 
    "default_config": {
-      "dataset_display_name": "Occupy", 
-      "dataset_name": "oc", 
-      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/"
+      "dataset_id": "oc", 
+      "dataset_name": "Occupy", 
+      "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
+      "measure_id": "pagerank", 
+      "num_of_days": 20
    }, 
    "description": "Visualize Pearson, Spearman, Kendall and weighted Kendall correlations for the selected datasets.", 
    "id": "1", 
@@ -23,14 +25,15 @@
       }, 
       {
          "config": {
-            "dataset_display_name": "Maidan", 
-            "dataset_name": "maidan"
+            "dataset_id": "oc", 
+            "dataset_name": "Occupy", 
+            "measure_id": "pagerank"
          }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
-         "name": "Visualizer", 
+         "name": "OriginalNetworkCorrelations", 
          "path": "ipython/pearson-and-jaccard.ipynb", 
          "pipeline_status": "on", 
          "session_id": null, 
