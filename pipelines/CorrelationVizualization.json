@@ -34,7 +34,7 @@
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "OriginalNetworkCorrelations", 
-         "path": "ipython/pearson-and-jaccard.ipynb", 
+         "path": "ipython/result_plotters/pearson-and-jaccard.ipynb", 
          "pipeline_status": "on", 
          "session_id": null, 
          "status": "Offline", 
