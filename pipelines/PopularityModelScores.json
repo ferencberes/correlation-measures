@@ -35,10 +35,6 @@
          "type": "Generator"
       }, 
       {
-         "config": {
-            "dataset_id": "15o", 
-            "measure_id": "pagerank"
-         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
@@ -50,10 +46,6 @@
          "type": "Experiment"
       }, 
       {
-         "config": {
-            "dataset_id": "15o", 
-            "measure_id": "pagerank"
-         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
@@ -76,24 +68,32 @@
          "type": "Experiment"
       }, 
       {
+         "config": {
+            "dataset_id": "15o", 
+            "measure_id": "pagerank"
+         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMSpearmanStability", 
          "path": "ipython/popularity_model/PopModelSpearmanStability.ipynb", 
-         "pipeline_status": "off", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "type": "Experiment"
       }, 
       {
+         "config": {
+            "dataset_id": "15o", 
+            "measure_id": "pagerank"
+         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMKendallStability", 
          "path": "ipython/popularity_model/PopModelKendallStability.ipynb", 
-         "pipeline_status": "off", 
+         "pipeline_status": "on", 
          "session_id": null, 
          "type": "Experiment"
       }, 
@@ -111,43 +111,11 @@
    ], 
    "reports": [
       {
-         "date": "2017-02-11", 
-         "id": "olympics_2017-02-11", 
+         "date": "2017-02-13", 
+         "id": "stability_experiment_1_2017-02-13", 
          "kernel_status": "active", 
-         "name": "olympics", 
-         "note": "Only for pagerank. But for kendall and spearman optimal lambda is between 0.1 and 0.2. Very good fit!", 
-         "user": "fberes"
-      }, 
-      {
-         "date": "2017-02-11", 
-         "id": "yosoy_first_experiment_2017-02-11", 
-         "kernel_status": "active", 
-         "name": "yosoy first experiment", 
-         "note": "Only for pagerank. But for kendall and spearman 0.1 lambda was optimal. Very good fit!", 
-         "user": "fberes"
-      }, 
-      {
-         "date": "2017-02-11", 
-         "id": "oc_first_experiment_2017-02-11", 
-         "kernel_status": "active", 
-         "name": "oc first experiment", 
-         "note": "Only for pagerank. But for kendall and spearman 0.2 lambda was optimal. Very good fit!", 
-         "user": "fberes"
-      }, 
-      {
-         "date": "2017-02-11", 
-         "id": "15o_2017-02-11", 
-         "kernel_status": "active", 
-         "name": "15o", 
-         "note": "optimal lambda is 0.3 for all measures and spearman and kendall. Weighted kendall was not calculated yet.", 
-         "user": "fberes"
-      }, 
-      {
-         "date": "2017-02-11", 
-         "id": "maidan_experiment_2017-02-11", 
-         "kernel_status": "active", 
-         "name": "maidan_experiment", 
-         "note": "0.0 seems to be the best lambda. Spearman for indegree was a little instable. WHY?", 
+         "name": "stability experiment 1", 
+         "note": "I executed stability experiments based on spearman and kendall. The results seem to be good. Lambdas are 0.3 for 15o, 0.1 for yo and olympics, 0.2 for oc. For maidan 0.0 is the optimal lambda, which is strange!?", 
          "user": "fberes"
       }
    ]
