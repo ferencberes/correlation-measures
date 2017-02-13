@@ -29,25 +29,21 @@
          "type": "Parameters"
       }, 
       {
-         "config": {
-            "dataset_id": "15o", 
-            "measure_id": "in_degree"
-         }, 
          "is_clone": "no", 
          "kernel_id": null, 
          "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationComputer", 
          "path": "ipython/utils/ComputeCorrelationAndStats.ipynb", 
-         "pipeline_status": "on", 
+         "pipeline_status": "off", 
          "session_id": null, 
          "status": "Offline", 
          "type": "Experiment"
       }, 
       {
          "config": {
-            "dataset_id": "15o", 
-            "measure_id": "in_degree"
+            "dataset_id": "maidan", 
+            "measure_id": "pagerank"
          }, 
          "dependencies": [
             "CorrelationComputer"
