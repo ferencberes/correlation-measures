@@ -28,16 +28,19 @@ def corr_kendalltau(top_list_prev, top_list):
     list_a, list_b = proc_corr(top_list_prev, top_list)
     return [kendalltau(list_a, list_b)[0]]
 
-def corr_weighted_kendalltau(top_list_prev, top_list):
+def corr_weighted_kendalltau(top_list_prev, top_list, use_fast=True):
     """Compute weighted Kendall's Tau correlation (based on custom implementation!).
     NOTE: Lists are DataFrame columns AND they must be sorted according to their value!!!"""
     # it is irrelevant whether we compute kendall for ranks or scores.
     list_a, list_b = proc_corr(top_list_prev, top_list)
     if len(list_a) != len(list_b):
         raise RuntimeError("The length of 'list_a' and 'list_b' must be the same!")
-    rank_list_a = tiedrank(list_a)
-    rank_list_b = tiedrank(list_b)
-    return [computeWKendall(rank_list_a,rank_list_b,ranked_input=True)[1]]
+    if use_fast:
+        return [fast_weighted_kendall(list_a, list_b)[1]]
+    else:
+        rank_list_a = tiedrank(list_a)
+        rank_list_b = tiedrank(list_b)
+        return [computeWKendall(rank_list_a,rank_list_b,ranked_input=True)[1]]
 
 ### Score list preproceor functions ###
 
@@ -99,3 +102,106 @@ def computeWKendall(day_1,day_2,ranked_input=False):
     Kendall=num/math.sqrt(denomX*denomY);
     WKendall=numW/math.sqrt(denomXW*denomYW);
     return [Kendall, WKendall]
+
+
+### FastWKEndall ###
+
+def merge_list(left,right, index_left, index_right, node_data,other_list):
+    merged_list = []
+    merged_index = []
+    left_move = 0
+    while ((len(left)>0) & (len(right)>0)):
+        if left[0]>=right[0]:
+            merged_list.append(left[0])
+            merged_index.append(index_left[0])
+            if (left[0] != right[0]) & (other_list[index_left[0]]!=other_list[index_right[0]]):
+                node_data['con'][index_left[0]] += len(right)
+                node_data['dis'][index_left[0]] += left_move
+                node_data['con'][index_right[0]] += 1
+            del left[0], index_left[0]
+        else:
+            left_move+=1
+            merged_list.append(right[0])
+            merged_index.append(index_right[0])
+            node_data['dis'][index_right[0]]+=len(left)
+            del right[0], index_right[0]
+    
+    if len(left)!=0:
+        merged_list.extend(left)
+        merged_index.extend(index_left)
+        for i in index_left:
+            node_data['dis'][i] += left_move
+        
+    elif len(right)!=0:
+        merged_list.extend(right)
+        merged_index.extend(index_right)
+    
+    return merged_list, merged_index
+
+
+def count_ties(list_with_ties):
+    same_as_next = [list_with_ties[i]==list_with_ties[i+1] for i in range(len(list_with_ties)-1)]+[False]
+    count = 1
+    tie_counts = []
+    for i in range(len(list_with_ties)):
+        if same_as_next[i] == True:
+            count+=1
+        else:
+            tie_counts.extend([count for i in range(count)])
+            count =1
+    return tie_counts
+
+
+def compute_avg_ranks(tie_counts):
+    ranks=[]
+    i=0
+    while len(ranks)<len(tie_counts):
+        rank = [(2*i+tie_counts[i]+1)/2 for j in range(tie_counts[i])]
+        i+=tie_counts[i]
+        ranks.extend(rank)
+    return ranks
+
+
+def count_con_dis_diff(list_to_sort,other_list):
+    list_indices = range(len(list_to_sort))
+    node_data = {'con':[0 for i in list_indices], 'dis':[0 for i in list_indices]}
+    lists_to_merge = [[value] for value in list_to_sort]
+    index_lists = [[i] for i in list_indices]
+
+    while len(lists_to_merge)>1:
+        merged_lists = []
+        merged_indicies = []
+        for i in range(int(len(lists_to_merge)/2)):
+            merged, indices = merge_list(lists_to_merge[2*i],lists_to_merge[2*i+1],
+                                         index_lists[2*i],index_lists[2*i+1], node_data, other_list)
+            merged_lists.append(merged)
+            merged_indicies.append(indices)
+        if len(lists_to_merge) % 2 != 0:
+            merged_lists.append(lists_to_merge[-1])
+            merged_indicies.append(index_lists[-1])
+        lists_to_merge = merged_lists
+        index_lists = merged_indicies
+    tie_counts = count_ties(lists_to_merge[0])
+    rank_B = compute_avg_ranks(tie_counts)
+    return_data = pd.DataFrame({'index':index_lists[0], 'rank_B':rank_B})
+    return_data.sort_values('index', inplace=True)
+    return_data.set_index('index', inplace=True)
+    return_data['concordant']=node_data["con"]
+    return_data['discordant']=node_data["dis"]
+    return return_data
+
+
+def fast_weighted_kendall(list_a, list_b):
+    """Weighted Kendall's Tau O(n*logn) implementation. The input lists should contain all nodes."""
+    data_table = pd.DataFrame({'A':list_a, 'B':list_b})
+    data_table['rank_A'] = tiedrank(list_a)
+    data_table = data_table.sort_values(['A', 'B'], ascending=False)
+    data_table.reset_index(inplace=True,drop=True)
+    list_to_sort=list(data_table['B'])
+    other_list = list(data_table['A'])
+    con_dis_data = count_con_dis_diff(list_to_sort,other_list)
+    data_table = pd.concat([data_table,con_dis_data], axis=1)
+    numW = sum(data_table.apply(lambda x: 1/x['rank_A']*(x['concordant']-x['discordant']), axis=1))
+    denomX = sum(data_table.apply(lambda x: 1/x['rank_A']*(x['concordant']+x['discordant']), axis=1))
+    denomY = sum(data_table.apply(lambda x: 1/x['rank_B']*(x['concordant']+x['discordant']), axis=1))
+    return data_table, numW/math.sqrt(denomX*denomY)

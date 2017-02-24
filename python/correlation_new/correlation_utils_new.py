@@ -38,7 +38,9 @@ def calculate_corr_for_a_day(input_prefix, corr_type, measure, day, output_prefi
     elif corr_type=="kendall":
         corr = cc.corr_kendalltau(prev_day,current_day)[0]
     elif corr_type=="w_kendall":
-        corr = cc.corr_weighted_kendalltau(prev_day,current_day)[0]
+        corr = cc.corr_weighted_kendalltau(prev_day,current_day,use_fast=False)[0]
+    elif corr_type=="w_kendall_fast":
+        corr = cc.corr_weighted_kendalltau(prev_day,current_day,use_fast=True)[0]
     else:
         raise RuntimeError("Invalid correlation type: %s!" % corr_type)
     if output_prefix == None:
