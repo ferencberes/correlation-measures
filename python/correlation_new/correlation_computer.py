@@ -51,7 +51,7 @@ def proc_corr(l_1, l_2):
     l2=l_2.copy()
     l1.columns=['l1_col']
     l2.columns=['l2_col']
-    df=pd.concat([l2, l1], axis=1).fillna(0)
+    df=pd.concat([l2, l1], axis=1).fillna(0.0)
     index_diff=list(set(list(l1.index))-set(list(l2.index)))
     index_diff.sort()
     sorted_id=list(l2.index)+index_diff # NOTE: input lists must be sorted! For custom weighted correlations?
@@ -106,39 +106,6 @@ def computeWKendall(day_1,day_2,ranked_input=False):
 
 ### FastWKEndall ###
 
-def merge_list(left,right, index_left, index_right, node_data,other_list):
-    merged_list = []
-    merged_index = []
-    left_move = 0
-    while ((len(left)>0) & (len(right)>0)):
-        if left[0]>=right[0]:
-            merged_list.append(left[0])
-            merged_index.append(index_left[0])
-            if (left[0] != right[0]) & (other_list[index_left[0]]!=other_list[index_right[0]]):
-                node_data['con'][index_left[0]] += len(right)
-                node_data['dis'][index_left[0]] += left_move
-                node_data['con'][index_right[0]] += 1
-            del left[0], index_left[0]
-        else:
-            left_move+=1
-            merged_list.append(right[0])
-            merged_index.append(index_right[0])
-            node_data['dis'][index_right[0]]+=len(left)
-            del right[0], index_right[0]
-    
-    if len(left)!=0:
-        merged_list.extend(left)
-        merged_index.extend(index_left)
-        for i in index_left:
-            node_data['dis'][i] += left_move
-        
-    elif len(right)!=0:
-        merged_list.extend(right)
-        merged_index.extend(index_right)
-    
-    return merged_list, merged_index
-
-
 def count_ties(list_with_ties):
     same_as_next = [list_with_ties[i]==list_with_ties[i+1] for i in range(len(list_with_ties)-1)]+[False]
     count = 1
@@ -151,7 +118,6 @@ def count_ties(list_with_ties):
             count =1
     return tie_counts
 
-
 def compute_avg_ranks(tie_counts):
     ranks=[]
     i=0
@@ -161,19 +127,36 @@ def compute_avg_ranks(tie_counts):
         ranks.extend(rank)
     return ranks
 
+def get_tie_list(index_list, value_list):
+    count_eq=1
+    value=value_list[0]
+    tie_indices={}
+    for i in range(1,len(value_list)):
+        if value_list[i]==value:
+            count_eq+=1
+        else:
+            for j in range(count_eq):
+                tie_indices[index_list[i-j-1]]=set([index_list[k] for k in range(i-count_eq,i)])
+                tie_indices[index_list[i-j-1]].remove(index_list[i-j-1])
+            value=value_list[i]
+            count_eq=1
+    i+=1
+    for j in range(count_eq):
+        tie_indices[index_list[i-j-1]]=set([index_list[k] for k in range(i-count_eq,i)])
+        tie_indices[index_list[i-j-1]].remove(index_list[i-j-1])
+    return tie_indices
 
-def count_con_dis_diff(list_to_sort,other_list):
-    list_indices = range(len(list_to_sort))
-    node_data = {'con':[0 for i in list_indices], 'dis':[0 for i in list_indices]}
+def count_con_dis_diff(list_to_sort,tie_indices):
+    node_data = {'con':np.zeros(len(list_to_sort)), 'dis':np.zeros(len(list_to_sort))}
     lists_to_merge = [[value] for value in list_to_sort]
-    index_lists = [[i] for i in list_indices]
+    index_lists = [[i] for i in range(len(list_to_sort))]
 
     while len(lists_to_merge)>1:
         merged_lists = []
         merged_indicies = []
         for i in range(int(len(lists_to_merge)/2)):
             merged, indices = merge_list(lists_to_merge[2*i],lists_to_merge[2*i+1],
-                                         index_lists[2*i],index_lists[2*i+1], node_data, other_list)
+                                         index_lists[2*i],index_lists[2*i+1], node_data, tie_indices)
             merged_lists.append(merged)
             merged_indicies.append(indices)
         if len(lists_to_merge) % 2 != 0:
@@ -190,18 +173,66 @@ def count_con_dis_diff(list_to_sort,other_list):
     return_data['discordant']=node_data["dis"]
     return return_data
 
+def merge_list(left,right, index_left, index_right, node_data,tie_indices):
+    merged_list = []
+    merged_index = []
+    while ((len(left)>0) & (len(right)>0)):
+        if left[0]>=right[0]:
+            merged_list.append(left[0])
+            merged_index.append(index_left[0])
+            #####
+            non_ties=np.array(list(set(index_right)-tie_indices[index_left[0]])).astype('int')
+            node_data['con'][non_ties]+=1
+            node_data['con'][index_left[0]]+=len(non_ties)
+            #####
+            del left[0], index_left[0]
+        else:
+            merged_list.append(right[0])
+            merged_index.append(index_right[0])
+            ####
+            non_ties=np.array(list(set(index_left)-tie_indices[index_right[0]])).astype('int')
+            node_data['dis'][non_ties]+=1
+            node_data['dis'][index_right[0]]+=len(non_ties)
+            ####
+            del right[0], index_right[0]
+    
+    if len(left)!=0:
+        merged_list.extend(left)
+        merged_index.extend(index_left)
+        
+    elif len(right)!=0:
+        merged_list.extend(right)
+        merged_index.extend(index_right)
+    return merged_list, merged_index
 
-def fast_weighted_kendall(list_a, list_b):
+
+def fast_weighted_kendall(x, y):
     """Weighted Kendall's Tau O(n*logn) implementation. The input lists should contain all nodes."""
+    # Anna switched list_a and list_b in her implementation
+    list_a, list_b = y, x
     data_table = pd.DataFrame({'A':list_a, 'B':list_b})
+    data_table.to_csv("/home/fberes/wkendall_test.csv",index=False)
     data_table['rank_A'] = tiedrank(list_a)
     data_table = data_table.sort_values(['A', 'B'], ascending=False)
     data_table.reset_index(inplace=True,drop=True)
+    data_table['index']=data_table.index
+    possible_pairs=len(data_table)-1
+    
+    tie_list_A =get_tie_list(data_table.index,data_table['A'])
+    data_table['no_tie_A']=data_table['index'].apply(lambda x: possible_pairs-len(tie_list_A[x]))
+    sorted_B_index = np.array(data_table['B']).argsort()
+    sorted_B = np.array(data_table['B'])[sorted_B_index]
+    tie_list_B = get_tie_list(sorted_B_index, sorted_B)
+    data_table['no_tie_B']=data_table['index'].apply(lambda x: possible_pairs-len(tie_list_B[x]))
+    data_table.drop('index', inplace=True, axis=1)
+    tie_indices = {key:tie_list_A[key]|tie_list_B[key] for key in tie_list_A}
+    
     list_to_sort=list(data_table['B'])
-    other_list = list(data_table['A'])
-    con_dis_data = count_con_dis_diff(list_to_sort,other_list)
+    con_dis_data = count_con_dis_diff(list_to_sort,tie_indices)
+    
     data_table = pd.concat([data_table,con_dis_data], axis=1)
     numW = sum(data_table.apply(lambda x: 1/x['rank_A']*(x['concordant']-x['discordant']), axis=1))
-    denomX = sum(data_table.apply(lambda x: 1/x['rank_A']*(x['concordant']+x['discordant']), axis=1))
-    denomY = sum(data_table.apply(lambda x: 1/x['rank_B']*(x['concordant']+x['discordant']), axis=1))
+    denomX = sum(data_table.apply(lambda x: 1/x['rank_A']*(x['no_tie_A']), axis=1))
+    denomY = sum(data_table.apply(lambda x: 1/x['rank_B']*(x['no_tie_B']), axis=1))
+    #print(denomX, denomY, numW)
     return data_table, numW/math.sqrt(denomX*denomY)

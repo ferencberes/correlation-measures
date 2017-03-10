@@ -93,7 +93,9 @@ def sort_and_get_corr(A, corr_type, idx):
     elif corr_type=="kendall":
         corr = cc.corr_kendalltau(prev_day,current_day)[0]
     elif corr_type=="w_kendall":
-        corr = cc.corr_weighted_kendalltau(prev_day,current_day)[0]
+        corr = cc.corr_weighted_kendalltau(prev_day,current_day,use_fast=False)[0]
+    elif corr_type=="w_kendall_fast":
+        corr = cc.corr_weighted_kendalltau(prev_day,current_day,use_fast=True)[0]
     else:
         raise RuntimeError("Invalid correlation type: %s!" % corr_type)
     return corr
