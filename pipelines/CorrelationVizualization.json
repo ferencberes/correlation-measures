@@ -1,5 +1,5 @@
 {
-   "config_path": "/home/fberes/git/correlation-measures/pipelines/CorrelationVizualization.json", 
+   "config_path": "pipelines/CorrelationVizualization.json", 
    "default_config": {
       "dataset_id": "oc", 
       "dataset_name": "Occupy", 
@@ -13,14 +13,10 @@
    "notebooks": [
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationVizualization", 
          "path": "pipelines/CorrelationVizualization.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Parameters"
       }, 
       {
@@ -30,14 +26,10 @@
             "measure_id": "pagerank"
          }, 
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "OriginalNetworkCorrelations", 
          "path": "ipython/result_plotters/pearson-and-jaccard.ipynb", 
          "pipeline_status": "on", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Visualizer"
       }
    ], 

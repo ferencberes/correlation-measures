@@ -1,5 +1,5 @@
 {
-   "config_path": "/home/fberes/git/correlation-measures/pipelines/PopularityModelScores.json", 
+   "config_path": "pipelines/PopularityModelScores.json", 
    "default_config": {
       "dataset_id": "15o", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
@@ -12,81 +12,58 @@
    "notebooks": [
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PopularityModelScores", 
          "path": "pipelines/PopularityModelScores.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Parameters"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMScoreGenerator", 
          "path": "ipython/popularity-model-score-generator.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Generator"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMSpearmanExperiment", 
          "path": "ipython/popularity_model/PopModelSpearmanPearsonExperiments.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
          "type": "Experiment"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMKendallExperiment", 
          "path": "ipython/popularity_model/PopModelKendallExperiments.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
          "type": "Experiment"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMWeightedKendallExperiment", 
          "path": "ipython/popularity_model/PopModelWeightedKendallExperiments.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
          "type": "Experiment"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMSpearmanStability", 
          "path": "ipython/popularity_model/PopModelSpearmanStability.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
          "type": "Experiment"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMKendallStability", 
          "path": "ipython/popularity_model/PopModelKendallStability.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
          "type": "Experiment"
       }, 
       {
@@ -95,13 +72,10 @@
             "measure_id": "pagerank"
          }, 
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "PMWeightedKendallStability", 
          "path": "ipython/popularity_model/PopModelWeightedKendallStability.ipynb", 
-         "pipeline_status": "on", 
-         "session_id": null, 
+         "pipeline_status": "off", 
          "type": "Experiment"
       }
    ], 
@@ -109,9 +83,11 @@
       {
          "date": "2017-02-13", 
          "id": "stability_experiment_1_2017-02-13", 
-         "kernel_status": "active", 
+         "kernel_status": "disabled", 
          "name": "stability experiment 1", 
          "note": "I executed stability experiments based on spearman and kendall. The results seem to be good. Lambdas are 0.3 for 15o, 0.1 for yo and olympics, 0.2 for oc. For maidan 0.0 is the optimal lambda, which is strange!?", 
+         "save_for_remote": "disabled", 
+         "type": "local", 
          "user": "fberes"
       }
    ]

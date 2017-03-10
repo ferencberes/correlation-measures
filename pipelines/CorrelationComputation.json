@@ -1,16 +1,16 @@
 {
-   "config_path": "/home/fberes/git/correlation-measures/pipelines/CorrelationComputation.json", 
+   "config_path": "pipelines/CorrelationComputation.json", 
    "default_config": {
       "corr_types": [
          "pearson", 
          "spearman", 
          "kendall", 
-         "w_kendall"
+         "w_kendall_fast"
       ], 
-      "dataset_id": "oc", 
+      "dataset_id": "maidan", 
       "experiment_folder": "/mnt/idms/fberes/network/correlation_2016_12/", 
       "measure_id": "pagerank", 
-      "num_workers": 20
+      "num_workers": 1
    }, 
    "description": "With this pipeline we can compute day-by-day correlations for Pearson, Spearman and Kendall using scipy. After we computed the correlations, other statistics are calculated as well (e.g.: ratio of active users by day)", 
    "id": "2", 
@@ -18,26 +18,18 @@
    "notebooks": [
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationComputation", 
          "path": "pipelines/CorrelationComputation.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Parameters"
       }, 
       {
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "CorrelationComputer", 
          "path": "ipython/utils/ComputeCorrelationAndStats.ipynb", 
          "pipeline_status": "off", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Experiment"
       }, 
       {
@@ -49,14 +41,10 @@
             "CorrelationComputer"
          ], 
          "is_clone": "no", 
-         "kernel_id": null, 
-         "kernel_status": "Offline", 
          "kernel_type": "py2-env", 
          "name": "ResultCollector", 
          "path": "ipython/utils/CorrelationResultCollector.ipynb", 
          "pipeline_status": "on", 
-         "session_id": null, 
-         "status": "Offline", 
          "type": "Experiment"
       }
    ], 
@@ -64,9 +52,11 @@
       {
          "date": "2017-02-09", 
          "id": "include_zero_indegree_2017-02-09", 
-         "kernel_status": "active", 
+         "kernel_status": "disabled", 
          "name": "include zero indegree", 
          "note": "I regenerated all file and result without filtering for only positive centrality score. Formerly, zero indegree nodes were excluded but all vertices were included for pagerank.", 
+         "save_for_remote": "disabled", 
+         "type": "local", 
          "user": "fberes"
       }, 
       {
@@ -75,7 +65,9 @@
          "kernel_status": "disabled", 
          "name": "Correlation measure recomputation I.", 
          "note": "I set up this pipeline for correlation measure recomputation. Then calculated Pearson, Spearman nad Kendall for our datasets. ", 
+         "save_for_remote": "disabled", 
          "status": "active", 
+         "type": "local", 
          "user": "fberes"
       }
    ]
